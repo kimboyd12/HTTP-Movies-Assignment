@@ -34,7 +34,7 @@ function Movie({ addToSavedList }) {
       <div className="save-button" onClick={saveMovie}>
         Save
       </div>
-      <div className="edit-button" onClick={() => push(`/update-movie/${movie.id}`)}>
+      <div className="edit-button" onClick={() => push(`/update-movie/${params.id}`)}>
         Edit Movie
       </div>
       </div>

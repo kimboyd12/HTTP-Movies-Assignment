@@ -4,47 +4,51 @@ import axios from "axios"
 
 
 const initialMovie = {
+    id: '',
     title: '',
     director: '',
     metascore: '',
     stars: []
 };
 
-const UpdateMovie = props => {
+const UpdateMovie = (props) => {
+    // const {push} = useHistory();
+    const [movie, setMovie] = useState(initialMovie);
     const {push} = useHistory();
-    const {movie, setMovie} = useState(initialMovie);
-    const {id} = useParams();
+    const params = useParams();
 
     useEffect(() => {
         axios
-            .get(`http://localhost:5000/api/movies/${id}`)
+            .get(`http://localhost:5000/api/movies/${params.id}`)
             .then(res => {
                 setMovie(res.data);
             })
             .catch(err => console.log(err));
-    }, [id]);
+    }, []);
 
     const changeHandler = e => {
         e.persist();
         let value = e.target.value;
-        if (e.target.name === "metascore") {
-            value = parseInt(value, 10);
+        if (e.target.name === "stars") {
+            value = e.target.value.split(',')
         }
 
         setMovie({
             ...movie, 
-            [e.target.name]: value
+            [e.target.name]: e.target.value
+        
         })
+        console.log(movie);
     }
 
     const submitHandler = e => {
         e.preventDefault();
         // put request to items
         axios
-            .put('http://localhost:5000/api/movies/${id}', movie)
+            .put(`http://localhost:5000/api/movies/${params.id}`, movie)
             .then(res => {
-                props.setMovie(res.data);
-                push(`/movies/${id}`);
+                // setMovie(res.data);
+                props.history.push('/');
             })
             .catch(err => console.log(err));
     }
@@ -77,7 +81,7 @@ const UpdateMovie = props => {
                 <input 
                     type="text"
                     name="stars"
-                    value={movie.stars}
+                    value={movie.stars.join(',')}
                     onChange={changeHandler}
                     placeholder="Stars"
                 />
